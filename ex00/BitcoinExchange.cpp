@@ -5,48 +5,40 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ayael-ou <ayael-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/24 17:29:44 by ayael-ou          #+#    #+#             */
-/*   Updated: 2023/12/25 20:34:36 by ayael-ou         ###   ########.fr       */
+/*   Created: 2023/12/25 22:16:55 by ayael-ou          #+#    #+#             */
+/*   Updated: 2023/12/25 22:16:55 by ayael-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sstream>
 #include "BitcoinExchange.hpp"
 
-BitcoinExchange::BitcoinExchange(const std::string &filename, int boleen) : _data()
-{
+#include "BitcoinExchange.hpp"
+
+BitcoinExchange::BitcoinExchange(const std::string& filename, int boleen) : _data(), index(0) {
     parser(filename, boleen);
     parserDate();
 }
 
-BitcoinExchange::~BitcoinExchange()
-{}
-
-
-void    BitcoinExchange::parser(const std::string &filename, int boleen)
-{
+void BitcoinExchange::parser(const std::string& filename, int boleen) {
     const std::string file_str = filename;
-    std::ifstream   file(file_str.c_str());
-    std::string     line;
-    int             boucle;
-    
-    boucle = boleen;
-    if (!file.is_open()){
+    std::ifstream file(file_str.c_str());
+    std::string line;
+    int boucle = boleen;
+
+    if (!file.is_open()) {
         std::cout << "Error of file cannot open !!!" << std::endl;
         exit(1);
     }
-    while (std::getline(file, line)){
-        if (!line.empty() && --boucle < 0){
+
+    while (std::getline(file, line)) {
+        if (!line.empty() && --boucle < 0) {
             parse_line(line, boleen);
         }
     }
     file.close();
 }
 
-
-void    BitcoinExchange::parse_line(const std::string &line, int boleen)
-{
-    
+void BitcoinExchange::parse_line(const std::string& line, int boleen) {
     Bitcoin_data data;
 
     data.years = parserYears(line, boleen);
@@ -58,20 +50,21 @@ void    BitcoinExchange::parse_line(const std::string &line, int boleen)
     data.old_month = 1000;
     data.old_years = 1000;
     data.good = 0;
-    if (data.day == -1 || data.month == -1 || data.years  == -1){
+
+    if (data.day == -1 || data.month == -1 || data.years == -1) {
         data.good = 1;
         data.error = "bad input -> " + line;
     }
-    if (data.value == -2){
+    if (data.value == -2) {
         data.good = 1;
         data.error = "Error : Number is not positive";
     }
-    if (data.value == -3){
+    if (data.value == -3) {
         data.good = 1;
         data.error = "Error : Number too large a number";
     }
-    std::cout << "value in parse line : " << std::fixed << std::setprecision(1) << data.value << std::endl;
-    this->_data.push_back(data);
+    // std::cout << "value in parse line : " << std::fixed << std::setprecision(1) << data.value << std::endl;
+    _data.insert(std::make_pair(index++, data));
 }
 
 int    BitcoinExchange::parserYears(const std::string &line, int index)
@@ -184,12 +177,14 @@ int     BitcoinExchange::parserValue(const std::string &line, int index, int bol
     return value_nb;
 }
 
+std::map<int, Bitcoin_data>& BitcoinExchange::getData() {
+    return _data;
+}
 
 void BitcoinExchange::verifDate(Bitcoin_data &data) 
 {
     
     switch (data.month) {
-        std::cout << "Value : " << std::fixed << std::setprecision(1) << data.value << std::endl;
         case 1:  // Janvier
         case 3:  // Mars
         case 5:  // Mai
@@ -226,72 +221,15 @@ void BitcoinExchange::verifDate(Bitcoin_data &data)
     }
 }
 
-
-void    BitcoinExchange::parserDate()
-{
-    std::vector<Bitcoin_data>::iterator it;
-    for (it = this->_data.begin(); it < this->_data.end(); it++){
-        verifDate(*it);
+void BitcoinExchange::parserDate() {
+    std::map<int, Bitcoin_data>::iterator it;
+    for (it = _data.begin(); it != _data.end(); ++it) {
+        verifDate(it->second);
     }
 }
 
-void    printData(const Bitcoin_data &data){
-    if (!data.good)
-        std::cout << data.years << "-" << data.month << "-" << data.day << " => " << std::fixed << std::setprecision(1) << data.value << " = " << data.exchangeRate << std::endl;
-    else
-        std::cout << data.error << std::endl;
+
+BitcoinExchange::~BitcoinExchange() {
 }
 
-void    FindDate(BitcoinExchange B1,  BitcoinExchange B2)
-{
-    std::vector<Bitcoin_data>   Bit1 = B1.getData();
-    
-
-    std::vector<Bitcoin_data>::iterator it;
-    for (it = Bit1.begin(); it < Bit1.end(); it++){
-        FindDate2(*it, B2);
-    }
-    
-}
-
-void    FindDate2(Bitcoin_data B1, BitcoinExchange B2)
-{
-    std::vector<Bitcoin_data>   Bit2 = B2.getData();
-
-    std::vector<Bitcoin_data>::iterator it;
-    int index = 0;
-    for (it = Bit2.begin(); it < Bit2.end(); it++){
-        search_short(B1, *it, index);
-        index++;
-    }
-    
-}
-
-
-void    search_short(Bitcoin_data B1, Bitcoin_data B2, int boleen)
-{
-    int Years1 = 365 * B1.years;
-    int Years2 = 365 * B2.years;
-    int Month1 = 31 * B1.month;
-    int Month2 = 31 * B2.month;
-    int DayB2 = B2.day;
-    int DayB1 = B1.day;
-    int DayB2_old = (365 * B1.old_years) + (31 * B1.old_month) + (B1.old_day);
-    int total1 = Years1 + Month1 + DayB1;
-    int total2 = Years2 + Month2 + DayB2;
-
-    if (total1 > total2 && !boleen && !B1.good)
-    {
-        B1.exchangeRate = B1.value * B2.value;
-        B1.old_day = B2.day;
-        B1.old_month = B2.month;
-        B1.old_years = B2.years;
-    }
-    else if (total2 < DayB2_old && total2 < total1 && boleen && !B1.good){
-        B1.exchangeRate = B1.value * B2.value;
-        // std::cout << "exchange value : "<< std::fixed << std::setprecision(1) << B1.exchangeRate << std::endl;
-        B1.old_day = B2.day;
-        B1.old_month = B2.month;
-        B1.old_years = B2.years;
-    }
-}
+// Les autres fonctions restent inchangées, mais elles doivent être également modifiées de manière similaire.

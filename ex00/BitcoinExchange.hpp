@@ -6,7 +6,7 @@
 /*   By: ayael-ou <ayael-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 14:20:44 by ayael-ou          #+#    #+#             */
-/*   Updated: 2023/12/25 17:53:31 by ayael-ou         ###   ########.fr       */
+/*   Updated: 2023/12/25 22:24:32 by ayael-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include <string>
 # include <vector>
+#include <map>
+#include <sstream>
 # include <algorithm>
 # include <iomanip>
 # include <fstream>
@@ -40,7 +42,7 @@ class BitcoinExchange
 {
     private :
     
-    std::vector<Bitcoin_data>   _data;
+    std::map<int, Bitcoin_data>   _data;
     int                        index;
 
     public :
@@ -53,9 +55,7 @@ class BitcoinExchange
     int     parserValue(const std::string &line, int index, int boleen);
     void    parserDate();
     void    verifDate(Bitcoin_data &data);
-    std::vector<Bitcoin_data> &getData(){
-        return this->_data;
-    }
+    std::map<int, Bitcoin_data> &getData();
     ~BitcoinExchange();   
 };
 
