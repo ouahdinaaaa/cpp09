@@ -33,6 +33,7 @@ void    BitcoinExchange::parser_csv(const std::string &filename)
     while (getline(file, date, ','))
     {
         getline(file, line);
+        this->_data
         std::cout << "date is ["<< date << "] and value is [" << line << "]" << std::endl; 
     }
 }
@@ -244,5 +245,4 @@ void BitcoinExchange::verifDate(int month, int day, int years)
 
 BitcoinExchange::~BitcoinExchange() 
 {}
-
 // Les autres fonctions restent inchangées, mais elles doivent être également modifiées de manière similaire.
