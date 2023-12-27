@@ -22,7 +22,7 @@ CC = c++
 RM = rm -rf
 
 %.o: %.cpp
-	${CC} -c $< -o $@ -std=c++98 -Wall -Wextra -Werror -g3
+	${CC} -c $< -o $@ -Wall -Wextra -Werror -g3
 
 ${NAME}: ${OBJS}
 	${CC} ${OBJS} -o ${NAME}

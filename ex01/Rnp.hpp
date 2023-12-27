@@ -15,10 +15,28 @@
 
 #include <iostream>
 #include <stack>
+#include <deque>
 #include <string>
 #include <cmath>
 #include <sstream>
 
-int RNP(const std::string& operation)
+
+class Rnp
+{
+private:
+    std::deque<std::string> _pile;
+    int            _index;
+
+public:
+    Rnp(const std::string &name);
+    void    calculate();
+    void    FirstInt(const std::string &name);
+    void    Verif();
+    ~Rnp();
+};
+
+std::string calculateNb(std::string nb1, std::string nb2, std::string op);
+
+int RNP(const std::string& operation);
 
 #endif

@@ -12,18 +12,36 @@
 
 #include "BitcoinExchange.hpp"
 
-#include "BitcoinExchange.hpp"
+BitcoinExchange::BitcoinExchange(const std::string& filename) : _data(), index(0) {
+    (void)filename;
+    parser_csv("data2.csv");
+    // parserDate();
+}
 
-BitcoinExchange::BitcoinExchange(const std::string& filename, int boleen) : _data(), index(0) {
-    parser(filename, boleen);
-    parserDate();
+
+void    BitcoinExchange::parser_csv(const std::string &filename)
+{
+    const std::string filee = filename;
+    std::ifstream file(filename.c_str());
+    std::string date;
+    std::string line;
+    // float exchange_rate;
+
+    if (!file.is_open()){
+        std::cout << "Error of file cannot open !!! " << std::endl;
+    }
+    while (getline(file, date, ','))
+    {
+        getline(file, line);
+        std::cout << "date is ["<< date << "] and value is [" << line << "]" << std::endl; 
+    }
 }
 
 void BitcoinExchange::parser(const std::string& filename, int boleen) {
     const std::string file_str = filename;
     std::ifstream file(file_str.c_str());
     std::string line;
-    int boucle = boleen;
+    int boucle = boleen -1;
 
     if (!file.is_open()) {
         std::cout << "Error of file cannot open !!!" << std::endl;
@@ -31,40 +49,45 @@ void BitcoinExchange::parser(const std::string& filename, int boleen) {
     }
 
     while (std::getline(file, line)) {
-        if (!line.empty() && --boucle < 0) {
+        if (!line.empty() && boucle-- < 0) {
             parse_line(line, boleen);
         }
     }
     file.close();
 }
 
+std::string AddDate2(int years, int month, int day) 
+{
+    std::stringstream ss;
+    ss << years << month << day;
+    return ss.str();
+}
+
 void BitcoinExchange::parse_line(const std::string& line, int boleen) {
-    Bitcoin_data data;
-
-    data.years = parserYears(line, boleen);
-    data.month = parserMonth(line, this->index);
-    data.day = parserDay(line, this->index);
-    data.value = parserValue(line, this->index, boleen);
-    data.date = line;
-    data.old_day = 1000;
-    data.old_month = 1000;
-    data.old_years = 1000;
-    data.good = 0;
-
-    if (data.day == -1 || data.month == -1 || data.years == -1) {
-        data.good = 1;
-        data.error = "bad input -> " + line;
+    int years, month, day, value;
+    // float exchangeRate;
+    std::string date, _olDate2, _date2;
+    
+    years = parserYears(line, 0);
+    month = parserMonth(line, this->index);
+    day = parserDay(line, this->index);
+    value = parserValue(line, this->index, boleen);
+    date = line;
+    // exchangeRate = 0;
+    _olDate2 = "";
+    _date2 = AddDate2(years, month, day);
+    if (day == -1 || month == -1 || years == -1) {
+        std::cout << "bad input -> " + line << std::endl;
+        exit (0);
     }
-    if (data.value == -2) {
-        data.good = 1;
-        data.error = "Error : Number is not positive";
+    if (value == -2) {
+        std::cout << "Error : Number is not positive" << std::endl;
     }
-    if (data.value == -3) {
-        data.good = 1;
-        data.error = "Error : Number too large a number";
+    if (value == -3) {
+        std::cout << "Error : Number too large a number" << std::endl;
+        exit (0);
     }
-    // std::cout << "value in parse line : " << std::fixed << std::setprecision(1) << data.value << std::endl;
-    _data.insert(std::make_pair(index++, data));
+    // _data.insert(std::make_pair(, value));
 }
 
 int    BitcoinExchange::parserYears(const std::string &line, int index)
@@ -138,7 +161,7 @@ int    BitcoinExchange::parserDay(const std::string &line, int index)
     return day_nb;   
 }
 
-int     BitcoinExchange::parserValue(const std::string &line, int index, int boleen)
+float     BitcoinExchange::parserValue(const std::string &line, int index, int boleen)
 {
     std::string value;
     float value_nb;
@@ -177,14 +200,11 @@ int     BitcoinExchange::parserValue(const std::string &line, int index, int bol
     return value_nb;
 }
 
-std::map<int, Bitcoin_data>& BitcoinExchange::getData() {
-    return _data;
-}
 
-void BitcoinExchange::verifDate(Bitcoin_data &data) 
+void BitcoinExchange::verifDate(int month, int day, int years) 
 {
     
-    switch (data.month) {
+    switch (month) {
         case 1:  // Janvier
         case 3:  // Mars
         case 5:  // Mai
@@ -192,27 +212,27 @@ void BitcoinExchange::verifDate(Bitcoin_data &data)
         case 8:  // Août
         case 10: // Octobre
         case 12: // Décembre
-            if(data.day < 1 || data.day > 31) {
-                data.good = 1;
+            if(day < 1 || day > 31) {
+                std::cout << "Error of day" << std::endl;
             }
             break ;
         case 4:  // Avril
         case 6:  // Juin
         case 9:  // Septembre
         case 11: // Novembre
-            if (data.day < 1 || data.day > 30){
-                data.good = 1;
+            if (day < 1 || day > 30){
+                std::cout << "Error of day" << std::endl;
             }
             break ;
         case 2:  // Février
-            if ((data.years % 4 == 0 && data.years % 100 != 0) || (data.years % 400 == 0)) { // Année bissextile
-                if (data.day < 1 || data.day > 29){
-                    data.good = 1;
+            if ((years % 4 == 0 && years % 100 != 0) || (years % 400 == 0)) { // Année bissextile
+                if (day < 1 || day > 29){
+                std::cout << "Error of day" << std::endl;
                 }
                 break ;
             } else {
-                if (data.day < 1 || data.day > 28){
-                    data.good = 1;
+                if (day < 1 || day > 28){
+                    std::cout << "Error of day" << std::endl;
                 }
                 break ;
         }
@@ -221,15 +241,8 @@ void BitcoinExchange::verifDate(Bitcoin_data &data)
     }
 }
 
-void BitcoinExchange::parserDate() {
-    std::map<int, Bitcoin_data>::iterator it;
-    for (it = _data.begin(); it != _data.end(); ++it) {
-        verifDate(it->second);
-    }
-}
 
-
-BitcoinExchange::~BitcoinExchange() {
-}
+BitcoinExchange::~BitcoinExchange() 
+{}
 
 // Les autres fonctions restent inchangées, mais elles doivent être également modifiées de manière similaire.

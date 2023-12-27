@@ -3,15 +3,9 @@
 
 int main(int argc, char **argv)
 {
-    if (argc != 1){
-        std::cout << "error arg" << std::endl;
-        return 1;
-    }
-    std::string line;
-    int         resultat;
-    std::cout << "Give me your operation" << std::endl;
-    std::getline(std::cin, line);
-    resultat = RPN(line);
-    std::cout << "Resultat : " << resultat << std::endl;
+    if (argc != 2)
+        std::cout << "Error of arg" << std::endl;
+    Rnp pilee(argv[1]);
+
     return (0);
 }
