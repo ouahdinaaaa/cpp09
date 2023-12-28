@@ -6,7 +6,7 @@
 /*   By: ayael-ou <ayael-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/26 20:26:30 by ayael-ou          #+#    #+#             */
-/*   Updated: 2023/12/27 18:45:37 by ayael-ou         ###   ########.fr       */
+/*   Updated: 2023/12/28 14:40:24 by ayael-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,17 @@ class BitcoinExchange
 {
     private :
     
-    std::map<std::string, int>   _data;
-    int                        index;
-    // int                        index2;
-    // int                        date2;   
+    std::map<std::string, float>   _data;
 
     public :
     BitcoinExchange(const std::string &filename);
-    void    parser(const std::string &filename, int boleen);
-    int     parserMonth(const std::string &line, int index);
-    int     parserYears(const std::string &line, int index);
-    int     parserDay(const std::string &line, int index);
-    void    parse_line(const std::string &line, int boleen);
-    float     parserValue(const std::string &line, int index, int boleen);
-    void    verifDate(int month, int day, int yeras);
+    void    parser(const std::string &filename);
+    int    verifDate(int month, int day, int years);
     void    parser_csv(const std::string &filename);
+    int     VerifArg(std::string &years, std::string &month, std::string &day, std::string value);
+    void    print_data();
+    std::string AddDate2(int years, int month, int day);
+    void    ParseOther(std::string &years, std::string &month, std::string &day, std::string &value);
     ~BitcoinExchange();   
 };
 

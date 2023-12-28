@@ -12,12 +12,18 @@
 
 #include "BitcoinExchange.hpp"
 
-BitcoinExchange::BitcoinExchange(const std::string& filename) : _data(), index(0) {
-    (void)filename;
-    parser_csv("data2.csv");
-    // parserDate();
+BitcoinExchange::BitcoinExchange(const std::string& filename) : _data() {
+    parser_csv("data.csv");
+    parser(filename);
 }
 
+void    BitcoinExchange::print_data()
+{
+    std::map<std::string, float>::iterator it;
+    for (it = this->_data.begin(); it != this->_data.end(); ++it){
+        std::cout << "string date : " << it->first << "||| value of date : " << it->second << std::endl;
+    }
+}
 
 void    BitcoinExchange::parser_csv(const std::string &filename)
 {
@@ -25,186 +31,104 @@ void    BitcoinExchange::parser_csv(const std::string &filename)
     std::ifstream file(filename.c_str());
     std::string date;
     std::string line;
-    // float exchange_rate;
-
+    std::map<std::string, float>  Map_data;
     if (!file.is_open()){
         std::cout << "Error of file cannot open !!! " << std::endl;
     }
+    getline(file, date);
     while (getline(file, date, ','))
     {
         getline(file, line);
-        this->_data
-        std::cout << "date is ["<< date << "] and value is [" << line << "]" << std::endl; 
+        Map_data[date] = atof(line.c_str());
     }
+    this->_data = Map_data;
 }
 
-void BitcoinExchange::parser(const std::string& filename, int boleen) {
+void BitcoinExchange::parser(const std::string& filename) 
+{
     const std::string file_str = filename;
     std::ifstream file(file_str.c_str());
-    std::string line;
-    int boucle = boleen -1;
+    std::string lineYears;
+    std::string lineMonth;
+    std::string lineDay;
+    std::string value;
 
     if (!file.is_open()) {
         std::cout << "Error of file cannot open !!!" << std::endl;
         exit(1);
     }
-
-    while (std::getline(file, line)) {
-        if (!line.empty() && boucle-- < 0) {
-            parse_line(line, boleen);
-        }
+    while (getline(file, lineYears, '-'))
+    {
+        getline(file, lineMonth, '-');
+        getline(file, lineDay, '|');
+        getline(file, value);
+        if (!VerifArg(lineYears, lineMonth, lineDay, value))// verif bien ecrit et bonne valeur 
+            ParseOther(lineYears, lineMonth, lineDay, value);
     }
     file.close();
 }
 
-std::string AddDate2(int years, int month, int day) 
+void    BitcoinExchange::ParseOther(std::string &years, std::string &month, std::string &day, std::string &value)
+{
+    float   exchangeFloat = 0;
+    std::string OldDate2 = "";
+    std::string date = years + "-" + month + "-" + day;
+    std::string date2 = AddDate2(atoi(years.c_str()), atoi(month.c_str()), atoi(day.c_str()));
+    for (std::map<std::string, float>::iterator it = this->_data.begin() ; it !=  this->_data.end(); it++)
+    {
+        if (it->first < date){
+            OldDate2 = it->first;
+            exchangeFloat = atof(value.c_str()) * (it->second);
+        }
+    }
+    std::cout << date2 << " => " << value << " = " << exchangeFloat << std::endl;
+}
+
+int    BitcoinExchange::VerifArg(std::string &years, std::string &month, std::string &day, std::string value)
+{
+    if (years[0] == '\n')
+        return -1;
+    for (size_t i = 0; i < years.size(); i++){
+        if (std::isalpha(years[i])){
+            std::cout << "bad input ->" << years << "-" << month << "-" << day << "|" << value << std::endl; 
+            return -1; }
+    }  for (size_t i = 0; i < month.size(); i++){
+        if (std::isalpha(month[i])){
+            std::cout << "bad input ->" << years << "-" << month << "-" << day << "|" << value << std::endl; 
+            return -1; }
+    }  for (size_t i = 0; i < day.size(); i++){
+        if (std::isalpha(day[i])){
+            std::cout << "bad input ->" << years << "-" << month << "-" << day << "|" << value << std::endl; 
+            return -1; }
+    } for (size_t i = 0; i < value.size(); i++){
+        if (std::isalpha(value[i]) || value.empty()){
+            std::cout << "bad input ->" << years << "-" << month << "-" << day << "|" << value << std::endl; 
+            return -1; }
+    } if (atol(value.c_str()) > 1000){
+        std::cout << "Error : Number is too large" << std::endl;
+        return -1;
+    } else if (atol(value.c_str()) < 0){
+        std::cout << "Error : not a positive number." << std::endl;
+        return -1; 
+    }
+    if (verifDate(atoi(month.c_str()), atoi(day.c_str()), atoi(years.c_str()))){
+        std::cout << "bad input -> " << years << "-" << month << "-" << day << "|" << value << std::endl; 
+        return -1;
+    }
+    return 0;
+}
+
+std::string BitcoinExchange::AddDate2(int years, int month, int day) 
 {
     std::stringstream ss;
-    ss << years << month << day;
+    ss << years << "-" << month << "-" << day;
     return ss.str();
 }
 
-void BitcoinExchange::parse_line(const std::string& line, int boleen) {
-    int years, month, day, value;
-    // float exchangeRate;
-    std::string date, _olDate2, _date2;
-    
-    years = parserYears(line, 0);
-    month = parserMonth(line, this->index);
-    day = parserDay(line, this->index);
-    value = parserValue(line, this->index, boleen);
-    date = line;
-    // exchangeRate = 0;
-    _olDate2 = "";
-    _date2 = AddDate2(years, month, day);
-    if (day == -1 || month == -1 || years == -1) {
-        std::cout << "bad input -> " + line << std::endl;
-        exit (0);
-    }
-    if (value == -2) {
-        std::cout << "Error : Number is not positive" << std::endl;
-    }
-    if (value == -3) {
-        std::cout << "Error : Number too large a number" << std::endl;
-        exit (0);
-    }
-    // _data.insert(std::make_pair(, value));
-}
-
-int    BitcoinExchange::parserYears(const std::string &line, int index)
+int BitcoinExchange::verifDate(int month, int day, int years) 
 {
-    std::string years;
-    int         years_nb;
-
-    while (line[index] && ((line[index] >= 9 && line[index] <= 13) || line[index] == ' '))
-        index++;
-    while (line[index]){
-        if (!std::isdigit(line[index]) )
-            break ;
-        years.push_back(line[index]);
-        index++;
-    }
-    years_nb = std::atoi(years.c_str());
-    if (years_nb < 0 || years_nb > 2024){
+    if(month > 12)
         return -1;
-    }
-    this->index = index;
-    return years_nb;
-}
-
-int    BitcoinExchange::parserMonth(const std::string &line, int index)
-{
-    std::string     month;
-    int             month_nb;
-    
-    if (!line[index] || !line[index + 1]|| line[index] != '-'){
-        return -1;
-    }
-    index++;
-    while (line[index] && ((line[index] >= 9 && line[index] <= 13) || line[index] == ' '))
-        index++;
-    while (line[index]){
-        if (!std::isdigit(line[index]))
-            break ;
-        month.push_back(line[index]);
-        index++;
-    }
-    month_nb = std::atoi(month.c_str());
-    if (month_nb < 1 || month_nb > 12){
-        return -1;
-    }
-    this->index = index;
-    return month_nb;
-}
-
-int    BitcoinExchange::parserDay(const std::string &line, int index)
-{
-    std::string day;
-    int         day_nb;
-
-    if (!line[index] || line[index] != '-' || !line[index + 1]){
-        return -1;
-    }
-    index++;
-    while (line[index] && ((line[index] >= 9 && line[index] <= 13) || line[index] == ' '))
-        index++;
-    while (line[index]){
-        if (!std::isdigit(line[index]))
-            break ;
-        day.push_back(line[index]);
-        index++;
-    }
-    day_nb = std::atoi(day.c_str());
-    if (day_nb < 1 || day_nb > 31){
-        return -1;
-    }
-    this->index = index;
-    return day_nb;   
-}
-
-float     BitcoinExchange::parserValue(const std::string &line, int index, int boleen)
-{
-    std::string value;
-    float value_nb;
-    char    str;
-    
-    if (boleen)
-        str = ',';
-    else
-        str = '|';
-    if (!(line[index] >= 9 && line[index] <= 13) && line[index] != str && line[index] != ' '){
-        return -1;
-    }
-    while (line[index] && ((line[index] >= 9 && line[index] <= 13) || line[index] == ' '))
-        index++;
-    if (line[index] && line[index] != str){
-        return -1;
-    }
-    index++;
-    while (line[index] && ((line[index] >= 9 && line[index] <= 13) || line[index] == ' '))
-        index++;
-    while (line[index])
-    {
-        if (!std::isdigit(line[index]) && line[index] != '-' && line[index] != '+' && line[index] != '.')
-            break ;
-        value.push_back(line[index]);
-        index++;
-    }
-    std::stringstream basic(value);
-    basic >> value_nb;
-    if (basic.fail() || (index < (int)line.size()))
-        return -1;
-    if (value_nb < 0 && !boleen)
-        return -2;
-    if (value_nb > 1000 && !boleen)
-        return -3;
-    return value_nb;
-}
-
-
-void BitcoinExchange::verifDate(int month, int day, int years) 
-{
-    
     switch (month) {
         case 1:  // Janvier
         case 3:  // Mars
@@ -213,36 +137,27 @@ void BitcoinExchange::verifDate(int month, int day, int years)
         case 8:  // Août
         case 10: // Octobre
         case 12: // Décembre
-            if(day < 1 || day > 31) {
-                std::cout << "Error of day" << std::endl;
-            }
-            break ;
+            if(day < 1 || day > 31)
+                return -1;
         case 4:  // Avril
         case 6:  // Juin
         case 9:  // Septembre
         case 11: // Novembre
-            if (day < 1 || day > 30){
-                std::cout << "Error of day" << std::endl;
-            }
-            break ;
+            if (day < 1 || day > 30)
+                return -1;
         case 2:  // Février
             if ((years % 4 == 0 && years % 100 != 0) || (years % 400 == 0)) { // Année bissextile
-                if (day < 1 || day > 29){
-                std::cout << "Error of day" << std::endl;
-                }
-                break ;
+                if (day < 1 || day > 29)
+                    return -1;
             } else {
-                if (day < 1 || day > 28){
-                    std::cout << "Error of day" << std::endl;
-                }
-                break ;
+                if (day < 1 || day > 28)
+                    return -1;
         }
         default:
             break ;
     }
+    return 0;
 }
-
 
 BitcoinExchange::~BitcoinExchange() 
 {}
-// Les autres fonctions restent inchangées, mais elles doivent être également modifiées de manière similaire.
