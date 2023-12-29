@@ -86,6 +86,7 @@ void    BitcoinExchange::ParseOther(std::string &years, std::string &month, std:
 
 int    BitcoinExchange::VerifArg(std::string &years, std::string &month, std::string &day, std::string value)
 {
+
     if (years[0] == '\n')
         return -1;
     for (size_t i = 0; i < years.size(); i++){
