@@ -6,7 +6,7 @@
 /*   By: ayael-ou <ayael-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:10:52 by ayael-ou          #+#    #+#             */
-/*   Updated: 2023/12/29 15:47:44 by ayael-ou         ###   ########.fr       */
+/*   Updated: 2023/12/31 14:19:10 by ayael-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,6 @@ int main(int argc, char **argv)
         return 1;}
 
     Pmerge  list(argc, argv);
+    
     return 0;
 }

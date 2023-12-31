@@ -19,6 +19,7 @@
 #include <string>
 #include <cmath>
 #include <sstream>
+#include <exception>
 
 
 class Rnp
@@ -33,10 +34,36 @@ public:
     void    FirstInt(const std::string &name);
     void    Verif();
     ~Rnp();
+
+    class ExceptionArg : public std::exception
+    {
+        public :
+        const char *what() const throw()
+        {
+            return ("Error on your list\n");
+        }
+    };
+
+    class ExceptionOperator : public std::exception
+    {
+        public : 
+        const char *what() const throw()
+        {
+            return ("Error of operator\n");
+        }
+    };
+
+    class ExceptionInsufficense : public std::exception
+    {
+        public :
+        const char *what() const throw()
+        {
+            return ("Insufficent element for calculation\n");
+        }
+    };
+    std::string calculateNb(std::string nb1, std::string nb2, std::string op);
 };
 
-std::string calculateNb(std::string nb1, std::string nb2, std::string op);
 
-int RNP(const std::string& operation);
 
 #endif

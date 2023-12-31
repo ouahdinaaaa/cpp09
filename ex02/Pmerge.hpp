@@ -6,7 +6,7 @@
 /*   By: ayael-ou <ayael-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 18:44:55 by ayael-ou          #+#    #+#             */
-/*   Updated: 2023/12/29 16:05:42 by ayael-ou         ###   ########.fr       */
+/*   Updated: 2023/12/30 19:53:43 by ayael-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ class Pmerge
     ~Pmerge();
     
     void   detectPlage();
+    std::vector<int>    calculate_cumulatif();
+    void    right_list();
 };
 
 int    verifArg(const std::string &num);

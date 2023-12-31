@@ -5,6 +5,8 @@
 
 *-----------------------------EXPLICATTION--------------------------------*
 
+Calcul pour connaitre la plage de valeur int max - int min
+
                 ALGO TRI SPECIAL(X) :
 
         1*) n = taille de la liste.
@@ -16,7 +18,7 @@
             -   m = [n /2].
 
         3*) Creation de paires delement 
-            -   Les elements de la liste 'X' sont regroupe par paires consecutives. Par exemple, pour 'X = [3, 1, 4, 2]', les paires seraient [(3, 1), (4, 2)]
+            -   Les elements de la liste 'X' sont regroupe par paires consecutives. Par exemple, pour 'X = [3, 1, 4, -2]', les paires seraient [(3, 1), (4, 2)]
 
             -   Si la taille de la liste est Impaires, le derniers element (NotPlace) est conserver separement.
 
