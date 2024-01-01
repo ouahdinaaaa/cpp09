@@ -6,7 +6,7 @@
 /*   By: ayael-ou <ayael-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 18:44:55 by ayael-ou          #+#    #+#             */
-/*   Updated: 2023/12/30 19:53:43 by ayael-ou         ###   ########.fr       */
+/*   Updated: 2024/01/01 22:53:29 by ayael-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <string>
 #include <vector>
+#include <list>
 #include <iostream>
 #include <algorithm>
 #include <sstream>
@@ -23,11 +24,8 @@
 class Pmerge
 {
     private:
-    int                 _size;
     std::vector<int>    _tab2;
-    std::vector<int>    _tab;
-    int                 _min;
-    int                 _max;
+    std::list<int>      _tab;
     
     public:
     
@@ -35,12 +33,15 @@ class Pmerge
     ~Pmerge();
     
     void   detectPlage();
-    std::vector<int>    calculate_cumulatif();
-    void    right_list();
+    std::list<int>    TriSpecial(std::list<int> &X);
+    std::vector<int>    create_vector(int argc, char **argv);
+    std::list<int>    create_list(int argc, char **argv);
+    std::vector<int>  TriSpecial(std::vector<int> &X);
+    void              afficheList();
+    void              afficheVector();
 };
 
 int    verifArg(const std::string &num);
 int    verifArgc(int nb, char **num);
-std::vector<int>    create_tab(int argc, char **argv);
 
 #endif
