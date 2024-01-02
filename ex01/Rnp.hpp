@@ -27,10 +27,12 @@ class Rnp
 private:
     std::deque<std::string> _pile;
     int            _index;
+    int             _size;
 
 public:
     Rnp(const std::string &name);
     void    calculate();
+    void    realSize(const std::string &line);
     void    FirstInt(const std::string &name);
     void    Verif();
     ~Rnp();

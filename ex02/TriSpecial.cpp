@@ -6,7 +6,7 @@
 /*   By: ayael-ou <ayael-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 12:05:18 by ayael-ou          #+#    #+#             */
-/*   Updated: 2024/01/01 23:16:29 by ayael-ou         ###   ########.fr       */
+/*   Updated: 2024/01/02 16:46:03 by ayael-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,24 +18,18 @@ std::vector<int> Pmerge::TriSpecial(std::vector<int> &X) {
 
   std::vector<int> ElementsPlusGrand;
   std::vector<std::pair<int, int>> pairs;
-  if (n == 1) {
+  if (n == 1)
     return X;
-  }
 
   int m = n / 2;
-
   for (int i = 0; i < m; i += 2) {
     pairs.push_back(std::make_pair(X[i], X[i + 1]));
-    if (pairs[i].second < pairs[i].first) {
+    if ( pairs[i].first > pairs[i].second)
       ElementsPlusGrand.push_back(pairs[i].first);
-      std::swap(pairs[i].first, pairs[i].second);
-    }
     else
         ElementsPlusGrand.push_back(pairs[i].second);
   }
-
   ElementsPlusGrand = (TriSpecial(ElementsPlusGrand));
-
   std::vector<int> resultat;
 
 for (const auto& pair : pairs) {
@@ -44,7 +38,6 @@ for (const auto& pair : pairs) {
     idx = std::lower_bound(resultat.begin(), resultat.end(), pair.second);
     resultat.insert(idx, pair.second);
 }
-
 
   for (int i = m + 1; i < n; ++i) {
     std::vector<int>::iterator idx = std::lower_bound(resultat.begin(), resultat.end(), X[i]);

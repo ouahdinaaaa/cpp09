@@ -6,19 +6,28 @@
 /*   By: ayael-ou <ayael-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 22:44:30 by ayael-ou          #+#    #+#             */
-/*   Updated: 2023/12/31 18:35:03 by ayael-ou         ###   ########.fr       */
+/*   Updated: 2024/01/02 17:01:51 by ayael-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Rnp.hpp"
 
 Rnp::Rnp(const std::string &name) : _pile() , _index(0) {
-    while (_index < (int)name.size()){
+    realSize(name);
+    while (_index < this->_size){
     FirstInt(name);
     Verif();
     calculate();
     }
     std::cout << "le resultat est : " << this->_pile[0] << std::endl;
+}
+
+void     Rnp::realSize(const std::string &line)
+{
+    int size = ((int)line.size() - 1);
+    while (size > 0 && line[size] == ' ')
+        size--;
+    this->_size = size;
 }
 
 void    Rnp::FirstInt(const std::string &name) {
@@ -44,12 +53,12 @@ void    Rnp::FirstInt(const std::string &name) {
             s2.push_back(name[this->_index++]);
         while (this->_index < (int)name.size() && isspace(name[this->_index]))
             this->_index++;
-        while (this->_index < (int)name.size() && !isspace(name[this->_index]))
+        while (this->_index < (int)name.size() && !isspace(name[this->_index]) && name[this->_index] != ' ')
             s3.push_back(name[this->_index++]);
         if (s3[0] != '*'  && s3[0] != '-' && s3[0] != '/' && s3[0] != '+') {
             while (this->_index < (int)name.size() && isspace(name[this->_index]))
                 this->_index++;
-            while (this->_index < (int)name.size() && !isspace(name[this->_index]))
+            while (this->_index < (int)name.size() && !isspace(name[this->_index]) && name[this->_index] != ' ')
                 s4.push_back(name[this->_index++]);
             if (s4[0] != '+' && s4[0] != '*' && s4[0] != '-' && s4[0] != '/')
                 throw(ExceptionArg());
@@ -62,7 +71,8 @@ void    Rnp::FirstInt(const std::string &name) {
                 s3.push_back(name[this->_index++]);
             if (s3.empty())
                 throw(ExceptionArg());}
-        } this->_pile.push_back(s1);
+        } 
+        this->_pile.push_back(s1);
         this->_pile.push_back(s2);
         this->_pile.push_back(s3);
         break ; }
@@ -118,7 +128,6 @@ void    Rnp::calculate() {
     str << nb2;
     if ((_pile[0].size() != (str1.str()).size()) || ((str.str()).size() != _pile[1].size()))
         throw(ExceptionArg());
-
     std::string op = _pile[2];
     std::ostringstream   basic;
     int res = 0;

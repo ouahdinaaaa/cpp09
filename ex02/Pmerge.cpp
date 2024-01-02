@@ -6,25 +6,33 @@
 /*   By: ayael-ou <ayael-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:10:37 by ayael-ou          #+#    #+#             */
-/*   Updated: 2024/01/01 23:15:59 by ayael-ou         ###   ########.fr       */
+/*   Updated: 2024/01/02 16:41:46 by ayael-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Pmerge.hpp"
 
-Pmerge::Pmerge(int size, char **argv) : _tab2(), _tab()
+Pmerge::Pmerge(int size, char **argv) : _tab2(size + 1), _tab(size + 1)
 {
     //time start
+    std::clock_t c_start = std::clock();
     this->_tab = create_list(size, argv);
+    afficheList("Before : ");
     this->_tab = TriSpecial(this->_tab);
+    c_start = std::clock() - c_start;
     /*
         List before // Afteeer
     */
     //time stop and affiche list ajouter container list pour liste non trie afficher before
-    // 
+    std::clock_t c_vec= std::clock();
     this->_tab2 = create_vector(size, argv);
-    afficheVector();
+    // afficheVector("Before : ");
     this->_tab2 = TriSpecial(this->_tab2);
+    c_vec = std::clock() - c_vec;
+    afficheVector("After : Vector Tried : ");
+    afficheList("After   : List Tried : ");
+    std::cout << "\nTime to process a range of 3000 element with std::Vector<int> : " << c_vec/static_cast<double>(CLOCKS_PER_SEC / 1000) << "seconde" << std::endl;
+    std::cout << "Time to process a range of 3000 element with std::List<int> : " << c_start/static_cast<double>(CLOCKS_PER_SEC / 1000) << "seconde" << std::endl;
     
 }
 
@@ -46,9 +54,9 @@ std::list<int>    Pmerge::create_list(int argc, char **argv)
     return tab;
 }
 
-void    Pmerge::afficheList()
+void    Pmerge::afficheList(const std::string &phrase)
 {
-    std::cout << "\nNum List: ";
+    std::cout << "\n" << phrase;
     for (std::list<int>::iterator it = this->_tab.begin(); it != this->_tab.end(); ++it){
         std::cout << " " << *it ;
     }
@@ -56,9 +64,9 @@ void    Pmerge::afficheList()
     
 }
 
-void    Pmerge::afficheVector()
+void    Pmerge::afficheVector(const std::string &phrase)
 {
-    std::cout << "\nNUm  Vector: ";
+    std::cout << "\n" << phrase;
     for (std::vector<int>::iterator it = this->_tab2.begin(); it != this->_tab2.end(); ++it){
         std::cout << " " << *it;
     }
