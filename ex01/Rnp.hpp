@@ -31,10 +31,10 @@ private:
 
 public:
     Rnp(const std::string &name);
+    void    Verif();
     void    calculate();
     void    realSize(const std::string &line);
     void    FirstInt(const std::string &name);
-    void    Verif();
     ~Rnp();
 
     class ExceptionArg : public std::exception

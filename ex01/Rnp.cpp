@@ -6,7 +6,7 @@
 /*   By: ayael-ou <ayael-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/25 22:44:30 by ayael-ou          #+#    #+#             */
-/*   Updated: 2024/01/02 17:01:51 by ayael-ou         ###   ########.fr       */
+/*   Updated: 2024/01/03 16:54:38 by ayael-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 Rnp::Rnp(const std::string &name) : _pile() , _index(0) {
     realSize(name);
+    if (name.size() == 0)
+        throw(ExceptionArg());
     while (_index < this->_size){
     FirstInt(name);
     Verif();
@@ -22,13 +24,19 @@ Rnp::Rnp(const std::string &name) : _pile() , _index(0) {
     std::cout << "le resultat est : " << this->_pile[0] << std::endl;
 }
 
-void     Rnp::realSize(const std::string &line)
+
+void    Rnp::realSize(const std::string &line)
 {
+    std::string name = "";
     int size = ((int)line.size() - 1);
     while (size > 0 && line[size] == ' ')
         size--;
     this->_size = size;
+    while (this->_index && line[this->_index] == ' ')
+        this->_index++;
+    
 }
+
 
 void    Rnp::FirstInt(const std::string &name) {
     std::string pile1;
