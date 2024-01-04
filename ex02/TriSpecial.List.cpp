@@ -19,23 +19,20 @@ std::list<int> Pmerge::TriSpecial(std::list<int> &X)
     std::list<int> ElementsPlusGrand;
     if (n <= 1)
         return X;
-
+    
     int m = n / 2;
     std::list<std::pair<int, int>> pairs;
     auto it = X.begin();
     for (int i = 0; i < m; i += 2) {
         if (std::next(it, 1) != X.end()) {
             pairs.push_back(std::make_pair(*it, *(std::next(it, 1))));
-            // Tri et récupération des éléments plus grands
             if (pairs.back().first > pairs.back().second) {
                 ElementsPlusGrand.push_back(pairs.back().first);
                 std::swap(pairs.back().first, pairs.back().second);
             } else 
                 ElementsPlusGrand.push_back(pairs.back().second);
-            }
-        std::advance(it, 2);
-    }
-    ElementsPlusGrand = (TriSpecial(ElementsPlusGrand));
+            } std::advance(it, 2);
+    } ElementsPlusGrand = (TriSpecial(ElementsPlusGrand));
     std::list<int> resultat;
     for (const auto& pair : pairs) {
     auto idx = std::lower_bound(resultat.begin(), resultat.end(), pair.first);
@@ -46,6 +43,9 @@ std::list<int> Pmerge::TriSpecial(std::list<int> &X)
     for (auto it = next(X.begin(), m + 1); it != X.end(); ++it) {
         auto idx = lower_bound(resultat.begin(), resultat.end(), *it);
         resultat.insert(idx, *it);
-    }
-    return resultat;
+    } if (resultat.size() != X.size()){
+        auto it = next(X.begin(), m);
+        auto idx = lower_bound(resultat.begin(), resultat.end(), *it);
+        resultat.insert(idx, *it);
+    } return resultat;
 }

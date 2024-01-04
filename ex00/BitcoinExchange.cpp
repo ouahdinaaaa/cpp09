@@ -25,6 +25,7 @@ void    BitcoinExchange::parser_csv(const std::string &filename) {
     std::map<std::string, float>  Map_data;
     if (!file.is_open()){
         std::cout << "Error of file cannot open !!! " << std::endl;
+        exit (0);
     }
     getline(file, date);
     while (getline(file, date, ',')) {
@@ -93,7 +94,9 @@ void BitcoinExchange::parser(const std::string& filename) {
     if (!file.is_open()) {
         std::cout << "Error of file cannot open !!!" << std::endl;
         exit(1);
-    } while (getline(file, line)) {
+    }
+    getline(file, line); 
+    while (getline(file, line)) {
         this->_index = 0;
         lineYears = GetYears(line);
         lineMonth = GetMonth(line);
@@ -153,8 +156,8 @@ std::string BitcoinExchange::AddDate2(int years, int month, int day) {
 }
 
 int BitcoinExchange::verifDate(int month, int day, int years) {
-    if(month > 12 || years > 2024 || years < 0)
-        return -1;
+    if(month > 12 || years > 2024 || years < 2009)
+        return 1;
     switch (month) {
         case 1:  // Janvier
         case 3:  // Mars
@@ -163,26 +166,26 @@ int BitcoinExchange::verifDate(int month, int day, int years) {
         case 8:  // Août
         case 10: // Octobre
         case 12: // Décembre
-            if(day < 1 || day > 31)
-                return -1;
+            if(day >= 1 && day <= 31)
+                return 0;
         case 4:  // Avril
         case 6:  // Juin
         case 9:  // Septembre
         case 11: // Novembre
-            if (day < 1 || day > 30)
-                return -1;
+            if (day >= 1 && day <= 30)
+                return 0;
         case 2:  // Février
             if ((years % 4 == 0 && years % 100 != 0) || (years % 400 == 0)) { // Année bissextile
-                if (day < 1 || day > 29)
-                    return -1;
+                if (day >= 1 && day <= 29)
+                    return 0;
             } else {
-                if (day < 1 || day > 28)
-                    return -1;
+                if (day >= 1 && day <= 28)
+                    return 0;
         }
         default:
             break ;
     }
-    return 0;
+    return 1;
 }
 
 

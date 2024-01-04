@@ -14,6 +14,7 @@
 #define RNP_HPP
 
 #include <iostream>
+#include <iomanip>
 #include <stack>
 #include <deque>
 #include <string>
@@ -22,20 +23,22 @@
 #include <exception>
 
 
-class Rnp
+class Rpn
 {
 private:
-    std::deque<std::string> _pile;
+    std::deque<double> _pile;
     int            _index;
     int             _size;
 
 public:
-    Rnp(const std::string &name);
-    void    Verif();
-    void    calculate();
-    void    realSize(const std::string &line);
-    void    FirstInt(const std::string &name);
-    ~Rnp();
+    Rpn();
+    Rpn(const Rpn &objs);
+    Rpn &operator=(const Rpn &objs);
+    void       parse(const std::string &expresion);
+    // void    calculate();
+    // void    realSize(const std::string &line);
+    // void    FirstInt(const std::string &name);
+    ~Rpn();
 
     class ExceptionArg : public std::exception
     {

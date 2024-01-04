@@ -30,3 +30,7 @@ s3 = 2
 on verifie case dapres s4 = * (donc s2 * s3) = s2
 s3 = prochain caractere + 
 et on repars
+
+// impair == '* - + /';
+// pair == 'digit';
+//

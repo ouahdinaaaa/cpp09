@@ -1,0 +1,14 @@
+BTC:
+
+file rights -> still reachable
+data.csv rights -> must quit after open failure // Fait
+'-' replaced by ' ' in input // Fait 
+30 31 not accepted // Fait 
+(Old years accepted) // Fait
+(first line of input 'date | value') // Fait
+
+
+    RPN :
+empty string ""
+one digit '1'
+(more than 2 symbols)

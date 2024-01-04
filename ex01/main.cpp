@@ -8,7 +8,8 @@ int main(int argc, char **argv)
         return 1;
     }
     try{
-        Rnp pilee(argv[1]);
+        Rpn pilee;
+        pilee.parse(argv[1]);
     }
     catch(const std::exception& e){
         std::cerr << e.what() << std::endl;}

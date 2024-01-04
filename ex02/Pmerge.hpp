@@ -6,7 +6,7 @@
 /*   By: ayael-ou <ayael-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 18:44:55 by ayael-ou          #+#    #+#             */
-/*   Updated: 2024/01/02 16:06:00 by ayael-ou         ###   ########.fr       */
+/*   Updated: 2024/01/04 20:41:25 by ayael-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ class Pmerge
     private:
     std::vector<int>    _tab2;
     std::list<int>      _tab;
+    int                 _size;
     
     public:
     
